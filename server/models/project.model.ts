@@ -108,9 +108,7 @@ export async function projectsById(id: number): Promise<Project | null> {
 }
 
 export async function createProject(data: CreateProjectType): Promise<Project> {
-  const project = await ProjectModel.create(data);
-
-  return project.toJSON();
+  return (await ProjectModel.create(data)).toJSON();
 }
 
 export async function updateProject(
@@ -121,7 +119,7 @@ export async function updateProject(
 
   if (!project) return null;
 
-  const updateData: Partial<Project> = {}
+  const updateData: Partial<Project> = {};
 
   if (data.title !== undefined) {
     updateData.title = data.title;

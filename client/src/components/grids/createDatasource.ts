@@ -5,6 +5,7 @@ import { instance } from "../../api/instance";
 export const createDatasource = <T>(
   url: string,
   extraParams: Record<string, string | number> = {},
+  onLoadErrorChange?: (hasError: boolean) => void,
 ): IDatasource => ({
   getRows: async (params: IGetRowsParams) => {
     const { startRow, endRow } = params;
@@ -18,9 +19,11 @@ export const createDatasource = <T>(
         },
       });
 
+      onLoadErrorChange?.(false);
       params.successCallback(response.data.items, response.data.total);
     } catch (err) {
       console.error("Ошибка загрузки:", err);
+      onLoadErrorChange?.(true);
       params.failCallback();
     }
   },

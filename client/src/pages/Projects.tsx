@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { instance } from "../api/instance";
 import { AllCommunityModule } from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
-import { Button, Card, Form, message, Modal, Space, Typography } from "antd";
+import { Alert, Button, Card, Form, message, Modal, Space, Typography } from "antd";
 import dayjs from "dayjs";
 import type {
   Project,
@@ -22,11 +22,14 @@ const Projects = () => {
   const tasksGridRef = useRef<AgGridReact<Task>>(null);
   const [taskModalMode, setTaskModalMode] = useState<TaskModalMode>(null);
   const [savingTask, setSavingTask] = useState(false);
+  const [projectsLoadError, setProjectsLoadError] = useState(false);
+  const [tasksLoadError, setTasksLoadError] = useState(false);
   const [taskForm] = Form.useForm<TaskFormValues>();
 
   const handleProjectSelect = (project: Project | null) => {
     setSelectedProject(project);
     setSelectedTask(null);
+    setTasksLoadError(false);
   };
 
   const handleDeleteTask = () => {
@@ -132,16 +135,20 @@ const Projects = () => {
   };
 
   const projectsDatasource = useMemo(
-    () => createDatasource<Project>("/projects"),
+    () => createDatasource<Project>("/projects", {}, setProjectsLoadError),
     [],
   );
 
   const tasksDatasource = useMemo(
     () =>
       selectedProject
-        ? createDatasource<Task>("/tasks", {
-            projectId: selectedProject.id,
-          })
+        ? createDatasource<Task>(
+            "/tasks",
+            {
+              projectId: selectedProject.id,
+            },
+            setTasksLoadError,
+          )
         : null,
     [selectedProject],
   );
@@ -150,6 +157,8 @@ const Projects = () => {
     <AgGridProvider modules={[AllCommunityModule]}>
       <ProjectGrid
         datasource={projectsDatasource}
+        loadError={projectsLoadError}
+        onRetry={() => setProjectsLoadError(false)}
         onProjectSelect={handleProjectSelect}
       />
 
@@ -187,6 +196,26 @@ const Projects = () => {
             </Space>
           }
         >
+          {tasksLoadError && (
+            <Alert
+              type="error"
+              showIcon
+              message="Не удалось загрузить задачи"
+              description="Проверьте соединение с сервером и повторите попытку."
+              style={{ marginBottom: 16 }}
+              action={
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setTasksLoadError(false);
+                    tasksGridRef.current?.api.purgeInfiniteCache();
+                  }}
+                >
+                  Повторить
+                </Button>
+              }
+            />
+          )}
           <div style={{ width: "100%", height: 400 }}>
             <AgGridReact<Task>
               ref={tasksGridRef}

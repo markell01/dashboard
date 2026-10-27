@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { instance } from "../api/instance";
 import { AllCommunityModule } from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
-import { Alert, Button, Card, Form, message, Modal, Space, Typography } from "antd";
+import { Alert, Button, Card, Empty, Form, message, Modal, Space } from "antd";
 import dayjs from "dayjs";
 import type {
   Project,
@@ -15,6 +15,7 @@ import { colTaskDefs } from "../components/grids/taskColumns";
 import TaskModal from "../components/TaskModal";
 import ProjectGrid from "../components/grids/projectGrids";
 import { defaultColDef } from "../components/grids/defaultColumnDef";
+import { FaTasks, FaDatabase } from "react-icons/fa";
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -244,10 +245,24 @@ const Projects = () => {
           </div>
         </Card>
       ) : (
-        <Card title="Задачи">
-          <Typography.Text type="secondary">
-            Выберите проект в верхней таблице, чтобы увидеть связанные задачи
-          </Typography.Text>
+        <Card
+          className="dashboard-card"
+          title={
+            <div className="card-heading">
+              <span className="card-heading-icon">
+                <FaTasks />
+              </span>
+              <span className="card-heading-copy">
+                <strong>Связанные задачи</strong>
+              </span>
+            </div>
+          }
+        >
+          <Empty
+            className="empty-tasks"
+            image={<FaDatabase size={46} color="#b6add8" />}
+            description="Выберите проект в верхней таблице, чтобы увидеть связанные задачи"
+          />
         </Card>
       )}
     </AgGridProvider>

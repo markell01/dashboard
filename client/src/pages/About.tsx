@@ -59,11 +59,6 @@ const About = () => {
           контроллеры и модели разделены; списки выбираются SQL-запросами с LIMIT
           и OFFSET.
         </Paragraph>
-        <Paragraph type="secondary" style={{ marginTop: 8, marginBottom: 0 }}>
-          Визуальная композиция основана на паттернах современных Material
-          Dashboard и примерах Berry: светлая рабочая область, карточки и
-          фиолетово-синие акценты.
-        </Paragraph>
       </Card>
 
       <Paragraph style={{ marginBottom: 0 }}>

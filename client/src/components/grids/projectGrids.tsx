@@ -5,6 +5,7 @@ import { Alert, Button, Card } from "antd";
 import { colProjectDefs } from "./projectColumns";
 import { defaultColDef } from "./defaultColumnDef";
 import { useRef } from "react";
+import { FaProjectDiagram } from "react-icons/fa";
 
 interface ProjectsGridProps {
   datasource: IDatasource;
@@ -22,7 +23,19 @@ const ProjectGrid = ({
   const gridRef = useRef<AgGridReact<Project>>(null);
 
   return (
-    <Card title={"Проекты"} style={{ marginBottom: 20 }}>
+    <Card
+      className="dashboard-card"
+      title={
+        <div className="card-heading">
+          <span className="card-heading-icon">
+            <FaProjectDiagram />
+          </span>
+          <span className="card-heading-copy">
+            <strong>Проекты</strong>
+          </span>
+        </div>
+      }
+    >
       {loadError && (
         <Alert
           type="error"

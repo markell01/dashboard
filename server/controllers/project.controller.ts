@@ -32,7 +32,7 @@ export async function getAllProjects(req: Request, res: Response) {
 
   const [items, total] = await Promise.all([
     getProjects(parsedQuery.data),
-    countProjects(),
+    countProjects(parsedQuery.data.search),
   ]);
 
   res.status(200).json({

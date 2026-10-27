@@ -5,6 +5,7 @@ export const projectsQuerySchema = z
   .object({
     limit: limitSchema,
     offset: offsetSchema,
+    search: z.string().trim().max(150).optional(),
   })
   .strict();
 

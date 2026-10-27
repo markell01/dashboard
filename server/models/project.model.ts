@@ -55,6 +55,7 @@ export const ProjectModel = sequelize.define<
 );
 
 export async function getProjects(query: ProjectsQuery): Promise<Project[]> {
+  const search = query.search || null;
   const items = await sequelize.query<Project>(
     `
       SELECT
@@ -64,27 +65,30 @@ export async function getProjects(query: ProjectsQuery): Promise<Project[]> {
           to_char(start_date, 'YYYY-MM-DD') AS "startDate",
           duration_days AS "durationDays"
       FROM projects
+      WHERE ($1::text IS NULL OR title ILIKE '%' || $1 || '%')
       ORDER BY id ASC
-      LIMIT $1
-      OFFSET $2
+      LIMIT $2
+      OFFSET $3
     `,
     {
       type: QueryTypes.SELECT,
-      bind: [query.limit, query.offset],
+      bind: [search, query.limit, query.offset],
     },
   );
 
   return items;
 }
 
-export async function countProjects(): Promise<number> {
+export async function countProjects(search?: string): Promise<number> {
   const rows = await sequelize.query<ProjectCountRow>(
     `
         SELECT COUNT(*) AS total
         FROM projects
+        WHERE ($1::text IS NULL OR title ILIKE '%' || $1 || '%')
     `,
     {
       type: QueryTypes.SELECT,
+      bind: [search || null],
     },
   );
 

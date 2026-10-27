@@ -5,7 +5,7 @@ const { Title, Paragraph } = Typography;
 
 const About = () => {
   return (
-    <Flex vertical gap={24}>
+    <Flex className="content-page" vertical gap={24}>
       <div>
         <Title level={2}>О проекте</Title>
         <Paragraph type="secondary" style={{ marginBottom: 0 }}>
@@ -58,6 +58,11 @@ const About = () => {
           Сервер предоставляет REST API для проектов и задач. Маршруты,
           контроллеры и модели разделены; списки выбираются SQL-запросами с LIMIT
           и OFFSET.
+        </Paragraph>
+        <Paragraph type="secondary" style={{ marginTop: 8, marginBottom: 0 }}>
+          Визуальная композиция основана на паттернах современных Material
+          Dashboard и примерах Berry: светлая рабочая область, карточки и
+          фиолетово-синие акценты.
         </Paragraph>
       </Card>
 
